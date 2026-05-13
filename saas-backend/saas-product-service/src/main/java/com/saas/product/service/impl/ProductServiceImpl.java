@@ -49,7 +49,7 @@ public class ProductServiceImpl implements ProductService {
         Page<Spu> page = new Page<>(query.getPage(), query.getSize());
 
         LambdaQueryWrapper<Spu> wrapper = new LambdaQueryWrapper<>();
-        if (query.getKeyword() != null && !query.getKeyword().isBlank()) {
+        if (query.getKeyword() != null && !query.getKeyword().trim().isEmpty()) {
             wrapper.like(Spu::getName, query.getKeyword());
         }
         if (query.getCategoryId() != null) {
