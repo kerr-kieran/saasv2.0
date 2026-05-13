@@ -1,0 +1,41 @@
+// Element Plus minimal overrides
+
+// Sidebar menu item hover
+.el-menu-item:hover,
+.el-sub-menu__title:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+// Card header
+.el-card__header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #ebeef5;
+  font-weight: 500;
+}
+
+// Table header
+.el-table th.el-table__cell {
+  background-color: #f5f7fa;
+}
+
+// Dialog
+.el-dialog__header {
+  border-bottom: 1px solid #ebeef5;
+  padding: 16px 20px;
+  margin-right: 0;
+}
+
+.el-dialog__footer {
+  border-top: 1px solid #ebeef5;
+  padding: 12px 20px;
+}
+
+// Pagination
+.el-pagination {
+  padding: 0;
+}
+
+// Small text tweaks
+.el-button--small {
+  font-size: 12px;
+}

@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  mysql-master:
+    image: mysql:8.0
+    container_name: saas-mysql-master
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root123}
+    volumes:
+      - mysql-master-data:/var/lib/mysql
+      - ../../../saas-db/mysql/init:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    networks:
+      - saas-net
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    container_name: saas-redis
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis123} --appendonly yes
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - saas-net
+    healthcheck:
+      test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  rocketmq-namesrv:
+    image: apache/rocketmq:5.1.0
+    container_name: saas-rmq-namesrv
+    command: sh mqnamesrv
+    ports:
+      - "9876:9876"
+    networks:
+      - saas-net
+
+  rocketmq-broker:
+    image: apache/rocketmq:5.1.0
+    container_name: saas-rmq-broker
+    command: sh mqbroker -n rocketmq-namesrv:9876
+    depends_on:
+      - rocketmq-namesrv
+    ports:
+      - "10911:10911"
+      - "10909:10909"
+    networks:
+      - saas-net
+    environment:
+      JAVA_OPT_EXT: "-server -Xms512m -Xmx512m"
+
+  nacos:
+    image: nacos/nacos-server:v2.2.0
+    container_name: saas-nacos
+    environment:
+      MODE: standalone
+    ports:
+      - "8848:8848"
+    networks:
+      - saas-net
+
+networks:
+  saas-net:
+    driver: bridge
+
+volumes:
+  mysql-master-data:
+  redis-data:

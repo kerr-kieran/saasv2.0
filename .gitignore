@@ -1,0 +1,39 @@
+# Maven
+target/
+*.jar
+*.war
+!.mvn/wrapper/maven-wrapper.jar
+
+# Node
+node_modules/
+dist/
+.vite/
+*.local
+
+# IDE
+.idea/
+*.iml
+.vscode/
+!.vscode/extensions.json
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker
+docker-compose.override.yml
+
+# Environment
+.env.local
+.env.*.local
+*.log
+
+# Claude Code
+.claude/settings.local.json
+.claude/sessions/
+.claude/cache/
+.claude/backups/

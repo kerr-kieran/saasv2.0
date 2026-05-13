@@ -1,0 +1,9 @@
+$primary-color: #409EFF;
+$sidebar-width: 200px;
+$sidebar-collapsed-width: 64px;
+$header-height: 60px;
+
+// Element Plus color overrides
+:root {
+  --el-color-primary: #{$primary-color};
+}

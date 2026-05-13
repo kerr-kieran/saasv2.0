@@ -1,0 +1,72 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REGISTRY = 'registry.example.com/saas'
+        MVN_OPTS = '-Dmaven.test.skip=true'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Backend') {
+            steps {
+                dir('saas-backend') {
+                    sh "mvn clean package ${MVN_OPTS}"
+                }
+            }
+        }
+
+        stage('Build Frontend') {
+            parallel {
+                stage('Admin') {
+                    steps {
+                        dir('saas-frontend-admin') {
+                            sh 'npm ci'
+                            sh 'npm run build'
+                        }
+                    }
+                }
+                stage('Mall') {
+                    steps {
+                        dir('saas-frontend-mall') {
+                            sh 'npm ci'
+                            sh 'npm run build'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker-compose -f saas-deploy/docker/docker-compose/docker-compose.yml build'
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                expression { env.BRANCH_NAME == 'main' }
+            }
+            steps {
+                sh '''
+                    docker-compose -f saas-deploy/docker/docker-compose/docker-compose.yml down
+                    docker-compose -f saas-deploy/docker/docker-compose/docker-compose.yml up -d
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(mvn *)",
+      "Bash(docker *)",
+      "Bash(docker-compose *)",
+      "Bash(npm *)",
+      "Bash(node *)",
+      "Bash(npx *)",
+      "Bash(curl *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(winget *)",
+      "Bash(vmrun *)",
+      "Bash(ssh *)",
+      "Bash(scp *)",
+      "Bash(sshpass *)",
+      "Bash(nc *)",
+      "Bash(vmrest *)",
+      "WebSearch(*)",
+      "WebFetch(*)",
+      "Read(e:/**)",
+      "Write(e:/**)",
+      "Edit(e:/**)",
+      "Glob(e:/**)",
+      "Grep(e:/**)"
+    ],
+    "additionalDirectories": [
+      "e:\\saasv2.0\\.claude\\skills"
+    ]
+  }
+}

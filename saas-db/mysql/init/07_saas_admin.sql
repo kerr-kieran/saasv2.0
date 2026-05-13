@@ -1,0 +1,62 @@
+CREATE DATABASE IF NOT EXISTS `saas_admin` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `saas_admin`;
+
+CREATE TABLE `saas_admin_user` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(64) NOT NULL,
+  `password` VARCHAR(256) NOT NULL COMMENT 'BCrypt',
+  `real_name` VARCHAR(64) DEFAULT NULL,
+  `phone` VARCHAR(20) DEFAULT NULL,
+  `email` VARCHAR(128) DEFAULT NULL,
+  `avatar` VARCHAR(512) DEFAULT NULL,
+  `status` TINYINT NOT NULL DEFAULT 1,
+  `last_login_time` DATETIME DEFAULT NULL,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `is_deleted` TINYINT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Admin user table';
+
+CREATE TABLE `saas_role` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(64) NOT NULL,
+  `code` VARCHAR(64) NOT NULL,
+  `description` VARCHAR(256) DEFAULT NULL,
+  `status` TINYINT NOT NULL DEFAULT 1,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Role table';
+
+CREATE TABLE `saas_permission` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `parent_id` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `name` VARCHAR(64) NOT NULL,
+  `code` VARCHAR(128) NOT NULL,
+  `type` TINYINT NOT NULL COMMENT '1=menu 2=button 3=api',
+  `path` VARCHAR(256) DEFAULT NULL,
+  `icon` VARCHAR(64) DEFAULT NULL,
+  `sort` INT NOT NULL DEFAULT 0,
+  `create_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Permission table';
+
+CREATE TABLE `saas_user_role` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `role_id` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_user_role` (`user_id`, `role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='User-Role mapping';
+
+CREATE TABLE `saas_role_permission` (
+  `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role_id` BIGINT UNSIGNED NOT NULL,
+  `permission_id` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_role_permission` (`role_id`, `permission_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Role-Permission mapping';

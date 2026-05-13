@@ -1,0 +1,5 @@
+#!/bin/sh
+# Maven Wrapper
+# Uses JDK 17
+export JAVA_HOME="${JAVA_HOME:-C:/Program Files/Eclipse Adoptium/jdk-17.0.19.10-hotspot}"
+exec "$JAVA_HOME/bin/java" -classpath "$(dirname "$0")/.mvn/wrapper/maven-wrapper.jar" org.apache.maven.wrapper.MavenWrapperMain "$@"
